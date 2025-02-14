@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1a1a1a;
+            cursor: pointer;
+        }
+
+        .heart {
+            font-size: 4rem;
+            transition: transform 0.3s ease;
+        }
+
+        .heart:hover {
+            transform: scale(1.2);
+        }
+
+        .heart-piece {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: fadeUp 1s forwards;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="heart">❤️</div>
+
+    <script>
+        const heart = document.querySelector('.heart');
+        
+        heart.addEventListener('click', (e) => {
+            const particles = 15;
+            const angleIncrement = (Math.PI * 2) / particles;
+            
+            for(let i = 0; i < particles; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'heart-piece';
+                piece.innerHTML = '❤️';
+                
+                // Random color
+                const hue = Math.random() * 360;
+                piece.style.color = `hsl(${hue}, 100%, 50%)`;
+                
+                // Calculate position
+                const angle = angleIncrement * i;
+                const radius = Math.random() * 200 + 100;
+                const tx = Math.cos(angle) * radius;
+                const ty = Math.sin(angle) * radius;
+                
+                piece.style.setProperty('--tx', `${tx}px`);
+                piece.style.setProperty('--ty', `${-ty}px`);
+                
+                // Position at click location
+                const rect = heart.getBoundingClientRect();
+                piece.style.left = `${rect.left + rect.width/2}px`;
+                piece.style.top = `${rect.top + rect.height/2}px`;
+                
+                document.body.appendChild(piece);
+                
+                // Remove element after animation
+                setTimeout(() => piece.remove(), 1000);
+            }
+        });
+    </script>
+</body>
+</html>
